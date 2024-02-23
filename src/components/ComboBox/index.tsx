@@ -1,63 +1,45 @@
-import React, { ChangeEvent, useState } from 'react';
-import { Character } from '../../types/Character';
+import React from "react";
 
-interface Props {
-  data: Character[];
-  handleSearch: (e: ChangeEvent<HTMLInputElement>) => void;
-  searchText: string;
-}
-
-const ComboBox: React.FC<Props> = ({ data, searchText, handleSearch }) => {
-  const [tags, setTags] = useState<Character[]>([]);
-  const [manipulatedData, setManipulatedData] = useState(data.map(item => ({ ...item, checked: false })));
-
-  const onSelect = (selectedItem: Character, checked: boolean) => {
-    setTags(prevTags => {
-      const exists = prevTags.some(tag => tag.id === selectedItem.id);
-      return checked ? (!exists ? [...prevTags, selectedItem] : prevTags) : prevTags.filter(tag => tag.id !== selectedItem.id);
-    });
-
-    setManipulatedData(prevData => prevData.map(item => item.id === selectedItem.id ? { ...item, checked } : item));
-  };
-
-  const onRemoveTag = (id: string | number) => {
-    setTags(prevTags => prevTags.filter(tag => tag.id !== id));
-    setManipulatedData(prevData => prevData.map(item => item.id === id ? { ...item, checked: false } : item));
-  };
-
-  const handleCheckboxChange = (e: ChangeEvent<HTMLInputElement>, item: Character) => {
-    onSelect(item, e.target.checked);
-  };
-
+const ComboBox: React.FC = ({
+  loading,
+  tags,
+  removeTag,
+  options,
+  handleCheck,
+  setSearchTerm,
+  searchTerm
+}) => {
   return (
-    <div>
-      <div>
-        <input value={searchText} onChange={handleSearch} />
-      </div>
+    <div className="combobox">
       <ul>
-        {tags.map(tag => (
-          <li key={tag.id}>
-            {tag.name}
-            <button onClick={() => onRemoveTag(tag.id)}>X</button>
+        {tags?.map((tag, index) => (
+          <li key={index} className="tag">
+            {tag} <button onClick={() => removeTag(tag)}>Remove</button>
           </li>
         ))}
       </ul>
-      <ul>
-        {manipulatedData.map(item => (
-          <li key={item.id}>
-            <label>
+      <input
+        type="text"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
+        placeholder="Type to search..."
+      />
+      {loading && <div>Searching... </div>}
+      {!loading && (
+        <div>
+          {options?.map((option) => (
+            <label key={option.id}>
               <input
                 type="checkbox"
-                checked={item.checked}
-                onChange={e => handleCheckboxChange(e, item)}
+                checked={option.isChecked}
+                onChange={() => handleCheck(option.id)}
               />
-              {item.image && <img src={item.image} alt={item.name} style={{ width: 40 }} />}
-              {item.name}
-              {item.episode && <p>{item.episode.length} Episodes</p>}
+              {option.name}
             </label>
-          </li>
-        ))}
-      </ul>
+          ))}
+        </div>
+      )}
+      
     </div>
   );
 };

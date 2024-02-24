@@ -84,6 +84,12 @@
   text-overflow: ellipsis;
 }
 
+.combobox-caret-down-icon {
+  position: absolute;
+  right: 10px;
+  top: 13px;
+}
+
 .combobox-tag-list::-webkit-scrollbar {
   display: none;
 }

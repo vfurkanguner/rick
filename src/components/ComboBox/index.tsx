@@ -51,13 +51,7 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             placeholder="Type to search..."
             className="combobox-input"
           />
-          <div
-            style={{
-              position: "absolute",
-              right: 5,
-              top: 13,
-            }}
-          >
+          <div className="combobox-caret-down-icon">
             <IconCaretDown width={16} height={16} stroke="#4A5567" />
           </div>
         </div>

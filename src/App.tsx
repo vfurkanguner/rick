@@ -13,22 +13,27 @@ const App: React.FC = () => {
     setSearchTerm,
     searchTerm,
     isResultEmpty,
-    errorMessage
+    errorMessage,
   } = useSearchAndMultiSelect();
 
   return (
     <div className="App">
-      <ComboBox
-        options={options}
-        handleCheck={handleCheck}
-        removeTag={removeTag}
-        setSearchTerm={setSearchTerm}
-        tags={tags}
-        loading={loading}
-        searchTerm={searchTerm}
-        isResultEmpty={isResultEmpty}
-        errorMessage={errorMessage}
-      />
+      <main className="app-container">
+        <h1 className="heading">
+          Rick & Morty Wiki Search
+        </h1>
+        <ComboBox
+          options={options}
+          handleCheck={handleCheck}
+          removeTag={removeTag}
+          setSearchTerm={setSearchTerm}
+          tags={tags}
+          loading={loading}
+          searchTerm={searchTerm}
+          isResultEmpty={isResultEmpty}
+          errorMessage={errorMessage}
+        />
+      </main>
     </div>
   );
 };

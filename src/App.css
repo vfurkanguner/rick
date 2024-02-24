@@ -1,13 +1,35 @@
 #root {
-  max-width: 1280px;
+  height: 100vh;
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+}
+
+.app-container {
   padding: 2rem;
+  max-width: 1280px;
+  margin: auto;
+  height: 100vh;
+  gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  /* background-color: black; */
+}
+
+.heading {
+  font-size: 3rem;
+  text-align: center;
+  width: 100%;
+  color: var(--gray-500);
 }
 
 .combobox {
   max-width: 500px;
+  width: 100%;
   gap: 8px;
   display: flex;
   flex-direction: column;
+  align-self: center;
 }
 
 .combobox-input-container {

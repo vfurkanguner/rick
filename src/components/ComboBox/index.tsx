@@ -19,6 +19,9 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
       isResultEmpty,
       errorMessage,
       handleKeyDown,
+      focusedOptionIndex,
+      onSelect,
+      isFocusEnabled
     },
     ref
   ) => {
@@ -54,8 +57,14 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
           {loading && <Loading />}
           {!errorMessage &&
             !loading &&
-            options?.map((option) => (
-              <label key={option.id} className="combobox-search-item">
+            options?.map((option, index) => (
+              <label
+                key={option.id}
+                className={`combobox-search-item ${
+                  isFocusEnabled && focusedOptionIndex === index ? "item-focused" : ""
+                }`}
+                onClick={() => onSelect(option.id, index)}
+              >
                 <input
                   type="checkbox"
                   checked={option.isChecked}

@@ -116,6 +116,10 @@
   transition: all 0.3 ease;
 }
 
+.item-focused {
+  border: 1px solid black;
+}
+
 .combobox-search-item:last-child {
   border-bottom: none;
 }

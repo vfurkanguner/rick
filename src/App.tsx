@@ -15,6 +15,9 @@ const App: React.FC = () => {
     isResultEmpty,
     errorMessage,
     handleKeyDown,
+    focusedOptionIndex,
+    onSelect,
+    isFocusEnabled,
     scrollRef
   } = useSearchAndMultiSelect();
 
@@ -25,6 +28,7 @@ const App: React.FC = () => {
           Rick & Morty Wiki Search
         </h1>
         <ComboBox
+          ref={scrollRef}
           options={options}
           handleCheck={handleCheck}
           removeTag={removeTag}
@@ -35,7 +39,9 @@ const App: React.FC = () => {
           isResultEmpty={isResultEmpty}
           errorMessage={errorMessage}
           handleKeyDown={handleKeyDown}
-          ref={scrollRef}
+          focusedOptionIndex={focusedOptionIndex}
+          onSelect={onSelect}
+          isFocusEnabled={isFocusEnabled}
         />
       </main>
     </div>

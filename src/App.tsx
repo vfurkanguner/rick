@@ -28,6 +28,7 @@ const App: React.FC = () => {
         </h1>
         <ComboBox
           ref={scrollRef}
+          outsideClickRef={outsideClickRef}
           options={options}
           handleCheck={handleCheck}
           removeTag={removeTag}
@@ -39,7 +40,6 @@ const App: React.FC = () => {
           errorMessage={errorMessage}
           focusedOptionIndex={focusedOptionIndex}
           isFocusEnabled={isFocusEnabled}
-          outsideClickRef={outsideClickRef}
         />
       </main>
     </div>

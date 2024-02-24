@@ -3,6 +3,7 @@ import IconClose from "../../assets/icons/IconClose";
 import Loading from "../Loading";
 import HighligtedText from "../HighligtedText";
 import { UseSearchAndMultiSelectReturnTypes } from "../../hooks/useSearchAndMultiSelect";
+import IconCaretDown from "../../assets/icons/IconCaretDown";
 
 interface ComboBoxProps extends UseSearchAndMultiSelectReturnTypes {}
 
@@ -20,7 +21,7 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
       errorMessage,
       focusedOptionIndex,
       isFocusEnabled,
-      outsideClickRef
+      outsideClickRef,
     },
     ref
   ) => {
@@ -50,6 +51,15 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             placeholder="Type to search..."
             className="combobox-input"
           />
+          <div
+            style={{
+              position: "absolute",
+              right: 5,
+              top: 13,
+            }}
+          >
+            <IconCaretDown width={16} height={16} stroke="#4A5567" />
+          </div>
         </div>
         <div className="combobox-search-list">
           {loading && <Loading />}
@@ -59,7 +69,9 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
               <label
                 key={option.id}
                 className={`combobox-search-item ${
-                  isFocusEnabled && focusedOptionIndex === index ? "item-focused" : ""
+                  isFocusEnabled && focusedOptionIndex === index
+                    ? "item-focused"
+                    : ""
                 }`}
               >
                 <input

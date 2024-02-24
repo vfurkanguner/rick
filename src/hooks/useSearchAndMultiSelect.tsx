@@ -138,7 +138,7 @@ export const useSearchAndMultiSelect =
 
         switch (event.key) {
           case "Backspace":
-            if (tags.length > 0) {
+            if (searchTerm === '' && tags.length > 0) {
               const tagsCopy = [...tags];
               removeTag(tagsCopy[tagsCopy.length - 1]);
             }
@@ -204,6 +204,6 @@ export const useSearchAndMultiSelect =
       scrollRef,
       outsideClickRef,
       focusedOptionIndex,
-      isFocusEnabled,
+      isFocusEnabled
     };
   };

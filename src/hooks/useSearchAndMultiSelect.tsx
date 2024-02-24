@@ -1,39 +1,68 @@
 import React, { useState, useEffect } from "react";
 import { BASE_API_URL } from "../configs";
 import { useDebounce } from "./useDebounce";
+import { Character } from "../types/character";
 
-interface CharacterOption {
-  id: number;
-  name: string;
-  isChecked: boolean;
+
+interface UseSearchAndMultiSelectReturn {
+  removeTag: (tagName: string) => void;
+  options: Character[];
+  handleCheck: (id: number) => void;
+  setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
+  tags: string[];
+  loading: boolean;
+  searchTerm: string;
+  isResultEmpty: boolean;
+  errorMessage: string;
 }
 
-export const useSearchAndMultiSelect: React.FC = () => {
-  const [options, setOptions] = useState<CharacterOption[]>([]);
-  const [loading, setLoading] = useState(true);
+export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
+  const [options, setOptions] = useState<Character[]>([]);
+  const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
   const debouncedName = useDebounce<string>(searchTerm, 500);
-  const isResultEmpty = options.length === 0;
+  const isResultEmpty = options?.length === 0;
 
   useEffect(() => {
+    setLoading(true);
+
+    if (errorMessage) {
+      setErrorMessage("");
+    }
+
     const fetchCharacters = async () => {
       try {
         const response = await fetch(
           `${BASE_API_URL}/character?name=${debouncedName}`
         );
+
         const data = await response.json();
-        console.log({ data });
-        const fetchedOptions: CharacterOption[] = data?.results?.map(
-          (character: any) => ({
+
+        if (response.status === 404) {
+          setErrorMessage(data.error);
+          setLoading(false);
+          return;
+        }
+
+        const fetchedOptions: Character[] = data?.results?.map(
+          (character: Character) => ({
             ...character,
             isChecked: false,
           })
         );
         setOptions(fetchedOptions);
-      } catch (error) {
-        console.error("There was an error fetching the characters:", error);
-        setOptions([]); // Clear options or handle errors as needed
+      } catch (err: unknown) {
+        let message = "An unexpected error occurred";
+        if (err instanceof Error) {
+          message = err.message;
+        } else if (typeof err === "string") {
+          message = err;
+        }
+        setErrorMessage(message);
+        setOptions([]);
       }
       setLoading(false);
     };
@@ -76,5 +105,6 @@ export const useSearchAndMultiSelect: React.FC = () => {
     loading,
     searchTerm,
     isResultEmpty,
+    errorMessage,
   };
 };

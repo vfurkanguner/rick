@@ -99,6 +99,8 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
       focusedOptionIndex,
       isFocusEnabled,
       outsideClickRef,
+      setIsInputFocused,
+      isInputFocused
     },
     ref
   ) => {
@@ -116,11 +118,14 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Type to search..."
             className="combobox-input"
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
           />
           <div className="combobox-caret-down-icon">
             <IconCaretDown width={16} height={16} stroke="#4A5567" />
           </div>
         </div>
+        {isInputFocused &&
         <div className="combobox-search-list">
           {loading && <Loading />}
           {showData &&
@@ -137,7 +142,7 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             ))}
           {showEmptRenderer && <EmptyListRenderer />}
           {showError && <ErrorMessage message={errorMessage} />}
-        </div>
+        </div>}
       </div>
     );
   }

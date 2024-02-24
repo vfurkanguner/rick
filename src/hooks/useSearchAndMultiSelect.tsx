@@ -18,6 +18,8 @@ export interface UseSearchAndMultiSelectReturnTypes {
   outsideClickRef?: RefObject<HTMLDivElement>;
   focusedOptionIndex: number | null;
   isFocusEnabled: boolean;
+  isInputFocused: boolean;
+  setIsInputFocused: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const SCROLL_INDEX_START = -1;
 
@@ -32,6 +34,7 @@ export const useSearchAndMultiSelect =
     const [focusedOptionIndex, setFocusedOptionIndex] = useState<number | null>(
       SCROLL_INDEX_START
     );
+    const [isInputFocused, setIsInputFocused] = useState<boolean>(false);
 
     const scrollRef = useRef<HTMLLIElement>(null);
     const outsideClickRef = useRef<HTMLDivElement>(null);
@@ -204,6 +207,8 @@ export const useSearchAndMultiSelect =
       scrollRef,
       outsideClickRef,
       focusedOptionIndex,
-      isFocusEnabled
+      isFocusEnabled,
+      isInputFocused, 
+      setIsInputFocused
     };
   };

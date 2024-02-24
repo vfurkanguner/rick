@@ -56,7 +56,6 @@ const SearchListItem: React.FC<SearchListItemProps> = ({
 }) => {
   return (
     <label
-      key={index}
       className={`combobox-search-item ${
         isFocusEnabled && focusedOptionIndex === index ? "item-focused" : ""
       }`}
@@ -86,7 +85,8 @@ const ErrorMessage = ({ message }: { message: string }) => {
 };
 
 const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
-  ({
+  (
+    {
       loading,
       tags,
       removeTag,
@@ -123,8 +123,10 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
         </div>
         <div className="combobox-search-list">
           {loading && <Loading />}
-          {showData && options.map((option, index) => (
+          {showData &&
+            options.map((option, index) => (
               <SearchListItem
+                key={option.id}
                 option={option}
                 isFocusEnabled={isFocusEnabled}
                 focusedOptionIndex={focusedOptionIndex}

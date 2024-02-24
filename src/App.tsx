@@ -4,42 +4,16 @@ import { useSearchAndMultiSelect } from "./hooks/useSearchAndMultiSelect";
 import "./App.css";
 
 const App: React.FC = () => {
-  const {
-    loading,
-    tags,
-    removeTag,
-    options,
-    handleCheck,
-    setSearchTerm,
-    searchTerm,
-    isResultEmpty,
-    errorMessage,
-    focusedOptionIndex,
-    isFocusEnabled,
-    scrollRef,
-    outsideClickRef
-  } = useSearchAndMultiSelect();
+  const { scrollRef, outsideClickRef, ...props } = useSearchAndMultiSelect();
 
   return (
     <div className="App">
       <main className="app-container">
-        <h1 className="heading">
-          Rick & Morty Wiki Search
-        </h1>
+        <h1 className="heading">Rick & Morty Wiki Search</h1>
         <ComboBox
           ref={scrollRef}
           outsideClickRef={outsideClickRef}
-          options={options}
-          handleCheck={handleCheck}
-          removeTag={removeTag}
-          setSearchTerm={setSearchTerm}
-          tags={tags}
-          loading={loading}
-          searchTerm={searchTerm}
-          isResultEmpty={isResultEmpty}
-          errorMessage={errorMessage}
-          focusedOptionIndex={focusedOptionIndex}
-          isFocusEnabled={isFocusEnabled}
+          {...props}
         />
       </main>
     </div>

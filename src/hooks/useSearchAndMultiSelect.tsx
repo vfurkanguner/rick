@@ -35,9 +35,7 @@ export const useSearchAndMultiSelect =
 
     const scrollRef = useRef<HTMLLIElement>(null);
     const outsideClickRef = useRef<HTMLDivElement>(null);
-
-    const debouncedName = useDebounce<string>(searchTerm, 500);
-
+    const debouncedSearch = useDebounce<string>(searchTerm, 500);
     const isResultEmpty = options?.length === 0;
 
     const handleCheck = (id: number, index: number) => {
@@ -68,12 +66,13 @@ export const useSearchAndMultiSelect =
     };
 
     const getFocusedAndScroll =
-      (focusedItem: Element | null) => (cb: () => void) => {
+      (focusedItem: Element | null) => (callback: () => void) => {
         setFocusEnabled(true);
-        cb();
+        callback();
         focusedItem?.scrollIntoView();
       };
 
+    // lose focus on outside click.
     useOnClickOutside(outsideClickRef, () => {
       setFocusEnabled(false);
     });
@@ -89,7 +88,7 @@ export const useSearchAndMultiSelect =
       const fetchCharacters = async () => {
         try {
           const response = await fetch(
-            `${BASE_API_URL}/character?name=${debouncedName}`
+            `${BASE_API_URL}/character?name=${debouncedSearch}`
           );
 
           const data = await response.json();
@@ -122,15 +121,15 @@ export const useSearchAndMultiSelect =
 
       fetchCharacters();
       // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [debouncedName]);
+    }, [debouncedSearch]);
 
     useEffect(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }, [tags]);
-    
-    // keyboard navigations. 
+
+    // keyboard navigations.
     // TODO: maybe could do better with custom KeyboardManagerClass?
     useEffect(() => {
       const handleKeyPress = (event: KeyboardEvent) => {

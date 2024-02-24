@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef, RefObject } from "react";
 import { BASE_API_URL } from "../configs";
 import { useDebounce } from "./useDebounce";
 import { Character } from "../types/character";
 
 
-interface UseSearchAndMultiSelectReturn {
+export interface UseSearchAndMultiSelectReturnTypes {
   removeTag: (tagName: string) => void;
   options: Character[];
   handleCheck: (id: number) => void;
@@ -15,9 +15,10 @@ interface UseSearchAndMultiSelectReturn {
   isResultEmpty: boolean;
   errorMessage: string;
   handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
+  scrollRef?: RefObject<HTMLLIElement>;
 }
 
-export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
+export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturnTypes => {
   const [options, setOptions] = useState<Character[]>([]);
   const [loading, setLoading] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
@@ -25,6 +26,7 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
   const [errorMessage, setErrorMessage] = useState<string>("");
 
   const debouncedName = useDebounce<string>(searchTerm, 500);
+  const scrollRef = useRef<HTMLLIElement>(null);
   const isResultEmpty = options?.length === 0;
 
   const handleCheck = (id: number) => {
@@ -105,6 +107,12 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
 
+  useEffect(() => {
+    if (scrollRef.current) {
+      scrollRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [tags]);
+
   return {
     removeTag,
     options,
@@ -115,6 +123,7 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
     searchTerm,
     isResultEmpty,
     errorMessage,
-    handleKeyDown
+    handleKeyDown,
+    scrollRef
   };
 };

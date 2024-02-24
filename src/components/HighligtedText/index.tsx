@@ -5,7 +5,7 @@ type Props = {
 
 export default function HighligtedText({ text, searchTerm }: Props) {
   if (!searchTerm.trim()) {
-    return <span>{text}</span>;
+    return <span className="combobox-search-item-heading">{text}</span>;
   }
 
   const regex = new RegExp(`(${searchTerm})`, "gi");

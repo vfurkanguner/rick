@@ -19,6 +19,7 @@ export interface UseSearchAndMultiSelectReturnTypes {
   focusedOptionIndex: number | null;
   isFocusEnabled: boolean;
 }
+const SCROLL_INDEX_START = -1;
 
 export const useSearchAndMultiSelect =
   (): UseSearchAndMultiSelectReturnTypes => {
@@ -27,14 +28,16 @@ export const useSearchAndMultiSelect =
     const [tags, setTags] = useState<string[]>([]);
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
-    const [focusedOptionIndex, setFocusedOptionIndex] = useState<number | null>(
-      -1
-    );
     const [isFocusEnabled, setFocusEnabled] = useState<boolean>(false);
+    const [focusedOptionIndex, setFocusedOptionIndex] = useState<number | null>(
+      SCROLL_INDEX_START
+    );
 
-    const debouncedName = useDebounce<string>(searchTerm, 500);
     const scrollRef = useRef<HTMLLIElement>(null);
     const outsideClickRef = useRef<HTMLDivElement>(null);
+
+    const debouncedName = useDebounce<string>(searchTerm, 500);
+
     const isResultEmpty = options?.length === 0;
 
     const handleCheck = (id: number, index: number) => {
@@ -64,6 +67,18 @@ export const useSearchAndMultiSelect =
       setOptions(newOptions);
     };
 
+    const getFocusedAndScroll =
+      (focusedItem: Element | null) => (cb: () => void) => {
+        setFocusEnabled(true);
+        cb();
+        focusedItem?.scrollIntoView();
+      };
+
+    useOnClickOutside(outsideClickRef, () => {
+      setFocusEnabled(false);
+    });
+
+    // data fetch operations.
     useEffect(() => {
       setLoading(true);
 
@@ -109,55 +124,54 @@ export const useSearchAndMultiSelect =
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedName]);
 
-    useOnClickOutside(outsideClickRef, () => {
-      setFocusEnabled(false);
-    });
-
     useEffect(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollIntoView({ behavior: "smooth" });
       }
     }, [tags]);
-
+    
+    // keyboard navigations. 
+    // TODO: maybe could do better with custom KeyboardManagerClass?
     useEffect(() => {
       const handleKeyPress = (event: KeyboardEvent) => {
         const focusedItem = window.document.querySelector(".item-focused");
-
-        if (event.key === "Backspace" && tags.length > 0) {
-          const tagsCopy = [...tags];
-          removeTag(tagsCopy[tagsCopy.length - 1]);
-          return;
-        }
+        const handleFocusAndScroll = getFocusedAndScroll(focusedItem);
 
         switch (event.key) {
+          case "Backspace":
+            if (tags.length > 0) {
+              const tagsCopy = [...tags];
+              removeTag(tagsCopy[tagsCopy.length - 1]);
+            }
+            break;
           case "Escape":
             setFocusedOptionIndex(null);
             setFocusEnabled(false);
             break;
           case "ArrowUp":
-            setFocusEnabled(true);
-            setFocusedOptionIndex((prevIndex) =>
-              prevIndex !== null
-                ? prevIndex > 0
-                  ? prevIndex - 1
+            handleFocusAndScroll(() =>
+              setFocusedOptionIndex((prevIndex) =>
+                prevIndex !== null
+                  ? prevIndex > 0
+                    ? prevIndex - 1
+                    : options.length - 1
                   : options.length - 1
-                : options.length - 1
+              )
             );
-            focusedItem?.scrollIntoView();
             break;
           case "ArrowDown":
-            setFocusEnabled(true);
-            setFocusedOptionIndex((prevIndex) =>
-              prevIndex === null ? 0 : (prevIndex + 1) % options.length
+            handleFocusAndScroll(() =>
+              setFocusedOptionIndex((prevIndex) =>
+                prevIndex === null ? 0 : (prevIndex + 1) % options.length
+              )
             );
-            focusedItem?.scrollIntoView();
             break;
           case "Tab":
-            setFocusEnabled(true);
-            setFocusedOptionIndex((prevIndex) =>
-              prevIndex === null ? 0 : (prevIndex + 1) % options.length
+            handleFocusAndScroll(() =>
+              setFocusedOptionIndex((prevIndex) =>
+                prevIndex === null ? 0 : (prevIndex + 1) % options.length
+              )
             );
-            focusedItem?.scrollIntoView();
             break;
           case "Enter":
             if (focusedOptionIndex !== null) {

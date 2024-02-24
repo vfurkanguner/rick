@@ -78,6 +78,7 @@ export const useSearchAndMultiSelect =
     // lose focus on outside click.
     useOnClickOutside(outsideClickRef, () => {
       setFocusEnabled(false);
+      setIsInputFocused(false);
     });
 
     // data fetch operations.
@@ -149,6 +150,7 @@ export const useSearchAndMultiSelect =
           case "Escape":
             setFocusedOptionIndex(null);
             setFocusEnabled(false);
+            setIsInputFocused(false);
             break;
           case "ArrowUp":
             handleFocusAndScroll(() =>

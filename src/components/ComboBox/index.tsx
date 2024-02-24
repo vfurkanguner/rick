@@ -119,7 +119,6 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             placeholder="Type to search..."
             className="combobox-input"
             onFocus={() => setIsInputFocused(true)}
-            onBlur={() => setIsInputFocused(false)}
           />
           <div className="combobox-caret-down-icon">
             <IconCaretDown width={16} height={16} stroke="#4A5567" />

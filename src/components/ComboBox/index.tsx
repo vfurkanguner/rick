@@ -18,9 +18,7 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
       searchTerm,
       isResultEmpty,
       errorMessage,
-      handleKeyDown,
       focusedOptionIndex,
-      onSelect,
       isFocusEnabled
     },
     ref
@@ -50,7 +48,6 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
             onChange={(e) => setSearchTerm(e.target.value)}
             placeholder="Type to search..."
             className="combobox-input"
-            onKeyDown={handleKeyDown}
           />
         </div>
         <div className="combobox-search-list">
@@ -63,12 +60,11 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
                 className={`combobox-search-item ${
                   isFocusEnabled && focusedOptionIndex === index ? "item-focused" : ""
                 }`}
-                onClick={() => onSelect(option.id, index)}
               >
                 <input
                   type="checkbox"
                   checked={option.isChecked}
-                  onChange={() => handleCheck(option.id)}
+                  onChange={() => handleCheck(option.id, index)}
                 />
                 <img src={option.image} alt={option.name} />
                 <div>

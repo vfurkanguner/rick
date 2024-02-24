@@ -6,15 +6,13 @@ import { Character } from "../types/character";
 export interface UseSearchAndMultiSelectReturnTypes {
   removeTag: (tagName: string) => void;
   options: Character[];
-  handleCheck: (id: number) => void;
-  onSelect: (id: number, index: number) => void;
+  handleCheck: (id: number, index: number) => void;
   setSearchTerm: React.Dispatch<React.SetStateAction<string>>;
   tags: string[];
   loading: boolean;
   searchTerm: string;
   isResultEmpty: boolean;
   errorMessage: string;
-  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
   scrollRef?: RefObject<HTMLLIElement>;
   focusedOptionIndex: number | null;
   isFocusEnabled: boolean;
@@ -36,7 +34,7 @@ export const useSearchAndMultiSelect =
     const scrollRef = useRef<HTMLLIElement>(null);
     const isResultEmpty = options?.length === 0;
 
-    const handleCheck = (id: number) => {
+    const handleCheck = (id: number, index: number) => {
       const newOptions = options?.map((option) => {
         if (option.id === id) {
           option.isChecked = !option.isChecked;
@@ -49,22 +47,7 @@ export const useSearchAndMultiSelect =
         return option;
       });
       setOptions(newOptions);
-    };
-
-    const onSelect = (id: number, index: number) => {
-      const newOptions = options?.map((option) => {
-        if (option.id === id) {
-          option.isChecked = !option.isChecked;
-          if (option.isChecked) {
-            setTags([...tags, option.name]);
-          } else {
-            setTags(tags.filter((tag) => tag !== option.name));
-          }
-        }
-        return option;
-      });
-      setOptions(newOptions);
-      setFocusedOptionIndex(index)
+      setFocusedOptionIndex(index);
     };
 
     const removeTag = (tagName: string) => {
@@ -78,21 +61,9 @@ export const useSearchAndMultiSelect =
       setOptions(newOptions);
     };
 
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-      if (e.key === "Backspace" && searchTerm === "" && tags.length > 0) {
-        const tagsCopy = [...tags];
-        removeTag(tagsCopy[tagsCopy.length - 1]);
-        return;
-      }
-    };
-
-    const handleCheckAndUpdateFocus = (id: number) => {
-      handleCheck(id);
-    };
-
     useEffect(() => {
       setLoading(true);
-
+      
       if (errorMessage) {
         setErrorMessage("");
       }
@@ -145,7 +116,7 @@ export const useSearchAndMultiSelect =
       const handleKeyPress = (event: KeyboardEvent) => {
         const focusedItem = window.document.querySelector(".item-focused");
 
-        if (event.key === "Backspace" && searchTerm === "" && tags.length > 0) {
+        if (event.key === "Backspace" && tags.length > 0) {
           const tagsCopy = [...tags];
           removeTag(tagsCopy[tagsCopy.length - 1]);
           return;
@@ -194,7 +165,7 @@ export const useSearchAndMultiSelect =
             if (focusedOptionIndex !== null) {
               const optionId = options[focusedOptionIndex]?.id;
               if (optionId !== undefined) {
-                handleCheckAndUpdateFocus(optionId);
+                handleCheck(optionId, focusedOptionIndex);
               }
             }
             break;
@@ -219,10 +190,8 @@ export const useSearchAndMultiSelect =
       searchTerm,
       isResultEmpty,
       errorMessage,
-      handleKeyDown,
       scrollRef,
       focusedOptionIndex,
-      onSelect,
-      isFocusEnabled
+      isFocusEnabled,
     };
   };

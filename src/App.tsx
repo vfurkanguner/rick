@@ -14,9 +14,7 @@ const App: React.FC = () => {
     searchTerm,
     isResultEmpty,
     errorMessage,
-    handleKeyDown,
     focusedOptionIndex,
-    onSelect,
     isFocusEnabled,
     scrollRef
   } = useSearchAndMultiSelect();
@@ -38,9 +36,7 @@ const App: React.FC = () => {
           searchTerm={searchTerm}
           isResultEmpty={isResultEmpty}
           errorMessage={errorMessage}
-          handleKeyDown={handleKeyDown}
           focusedOptionIndex={focusedOptionIndex}
-          onSelect={onSelect}
           isFocusEnabled={isFocusEnabled}
         />
       </main>

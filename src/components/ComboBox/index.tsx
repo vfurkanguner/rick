@@ -19,12 +19,13 @@ const ComboBox = React.forwardRef<HTMLLIElement, ComboBoxProps>(
       isResultEmpty,
       errorMessage,
       focusedOptionIndex,
-      isFocusEnabled
+      isFocusEnabled,
+      outsideClickRef
     },
     ref
   ) => {
     return (
-      <div className="combobox">
+      <div className="combobox" ref={outsideClickRef}>
         <div className="combobox-input-container">
           {tags.length > 0 && (
             <ul className="combobox-tag-list">

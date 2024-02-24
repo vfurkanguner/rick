@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, RefObject } from "react";
 import { BASE_API_URL } from "../configs";
 import { useDebounce } from "./useDebounce";
+import { useOnClickOutside } from "./useOnClickOutside";
 import { Character } from "../types/character";
 
 export interface UseSearchAndMultiSelectReturnTypes {
@@ -14,6 +15,7 @@ export interface UseSearchAndMultiSelectReturnTypes {
   isResultEmpty: boolean;
   errorMessage: string;
   scrollRef?: RefObject<HTMLLIElement>;
+  outsideClickRef?: RefObject<HTMLDivElement>;
   focusedOptionIndex: number | null;
   isFocusEnabled: boolean;
 }
@@ -26,12 +28,13 @@ export const useSearchAndMultiSelect =
     const [searchTerm, setSearchTerm] = useState<string>("");
     const [errorMessage, setErrorMessage] = useState<string>("");
     const [focusedOptionIndex, setFocusedOptionIndex] = useState<number | null>(
-      0
+      -1
     );
     const [isFocusEnabled, setFocusEnabled] = useState<boolean>(false);
 
     const debouncedName = useDebounce<string>(searchTerm, 500);
     const scrollRef = useRef<HTMLLIElement>(null);
+    const outsideClickRef = useRef<HTMLDivElement>(null);
     const isResultEmpty = options?.length === 0;
 
     const handleCheck = (id: number, index: number) => {
@@ -63,7 +66,7 @@ export const useSearchAndMultiSelect =
 
     useEffect(() => {
       setLoading(true);
-      
+
       if (errorMessage) {
         setErrorMessage("");
       }
@@ -106,6 +109,10 @@ export const useSearchAndMultiSelect =
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [debouncedName]);
 
+    useOnClickOutside(outsideClickRef, () => {
+      setFocusEnabled(false);
+    });
+
     useEffect(() => {
       if (scrollRef.current) {
         scrollRef.current.scrollIntoView({ behavior: "smooth" });
@@ -128,10 +135,7 @@ export const useSearchAndMultiSelect =
             setFocusEnabled(false);
             break;
           case "ArrowUp":
-            focusedItem?.scrollIntoView({
-              behavior: "smooth",
-              inline: "start",
-            });
+            setFocusEnabled(true);
             setFocusedOptionIndex((prevIndex) =>
               prevIndex !== null
                 ? prevIndex > 0
@@ -139,27 +143,21 @@ export const useSearchAndMultiSelect =
                   : options.length - 1
                 : options.length - 1
             );
-            setFocusEnabled(true);
+            focusedItem?.scrollIntoView();
             break;
           case "ArrowDown":
-            focusedItem?.scrollIntoView({
-              behavior: "smooth",
-              inline: "start",
-            });
+            setFocusEnabled(true);
             setFocusedOptionIndex((prevIndex) =>
               prevIndex === null ? 0 : (prevIndex + 1) % options.length
             );
-            setFocusEnabled(true);
+            focusedItem?.scrollIntoView();
             break;
           case "Tab":
-            focusedItem?.scrollIntoView({
-              behavior: "smooth",
-              inline: "start",
-            });
+            setFocusEnabled(true);
             setFocusedOptionIndex((prevIndex) =>
               prevIndex === null ? 0 : (prevIndex + 1) % options.length
             );
-            setFocusEnabled(true);
+            focusedItem?.scrollIntoView();
             break;
           case "Enter":
             if (focusedOptionIndex !== null) {
@@ -191,6 +189,7 @@ export const useSearchAndMultiSelect =
       isResultEmpty,
       errorMessage,
       scrollRef,
+      outsideClickRef,
       focusedOptionIndex,
       isFocusEnabled,
     };

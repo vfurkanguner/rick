@@ -16,7 +16,8 @@ const App: React.FC = () => {
     errorMessage,
     focusedOptionIndex,
     isFocusEnabled,
-    scrollRef
+    scrollRef,
+    outsideClickRef
   } = useSearchAndMultiSelect();
 
   return (
@@ -38,6 +39,7 @@ const App: React.FC = () => {
           errorMessage={errorMessage}
           focusedOptionIndex={focusedOptionIndex}
           isFocusEnabled={isFocusEnabled}
+          outsideClickRef={outsideClickRef}
         />
       </main>
     </div>

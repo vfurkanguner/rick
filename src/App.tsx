@@ -1,7 +1,7 @@
 import React from "react";
-import { ComboBox } from "./components";
-import { useSearchAndMultiSelect } from "./hooks/useSearchAndMultiSelect";
-import "./App.css";
+import { ComboBox } from "@components/index";
+import { useSearchAndMultiSelect } from "@hooks/useSearchAndMultiSelect";
+import '@styles/App.css'
 
 const App: React.FC = () => {
   const { scrollRef, outsideClickRef, ...props } = useSearchAndMultiSelect();

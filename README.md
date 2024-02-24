@@ -19,7 +19,6 @@ To get started with the rick project, follow these steps:
 First, clone the repository to your local machine by running:
 
 ```bash
-Copy code
 git clone https://github.com/vfurkanguner/rick.git
 ```
 
@@ -27,7 +26,6 @@ git clone https://github.com/vfurkanguner/rick.git
 After cloning the repository, navigate into the project directory:
 
 ```bash
-Copy code
 cd rick
 ```
 
@@ -35,7 +33,6 @@ cd rick
 Once inside the project directory, install the project dependencies using pnpm:
 
 ```bash
-Copy code
 pnpm install
 ```
 
@@ -43,8 +40,5 @@ pnpm install
 After installing the dependencies, you can start the development server by running:
 
 ```bash
-Copy code
 pnpm run dev
 ```
-
-This command will start the development server, usually accessible via http://localhost:3000 or another port specified in the terminal output.

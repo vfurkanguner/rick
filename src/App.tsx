@@ -14,6 +14,7 @@ const App: React.FC = () => {
     searchTerm,
     isResultEmpty,
     errorMessage,
+    handleKeyDown
   } = useSearchAndMultiSelect();
 
   return (
@@ -32,6 +33,7 @@ const App: React.FC = () => {
           searchTerm={searchTerm}
           isResultEmpty={isResultEmpty}
           errorMessage={errorMessage}
+          handleKeyDown={handleKeyDown}
         />
       </main>
     </div>

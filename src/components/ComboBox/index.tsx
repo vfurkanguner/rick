@@ -4,7 +4,6 @@ import Loading from "../Loading";
 import HighligtedText from "../HighligtedText";
 import { Character } from "../../types/character";
 
-
 interface ComboBoxProps {
   loading: boolean;
   tags: string[];
@@ -15,6 +14,7 @@ interface ComboBoxProps {
   searchTerm: string;
   isResultEmpty: boolean;
   errorMessage: string;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 const ComboBox: React.FC<ComboBoxProps> = ({
@@ -26,16 +26,18 @@ const ComboBox: React.FC<ComboBoxProps> = ({
   setSearchTerm,
   searchTerm,
   isResultEmpty,
-  errorMessage
+  errorMessage,
+  handleKeyDown,
 }) => {
   const dummy = useRef<HTMLLIElement>(null);
+
+  
 
   useEffect(() => {
     if (dummy.current) {
       dummy.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [tags]);
-
 
   return (
     <div className="combobox">
@@ -62,19 +64,22 @@ const ComboBox: React.FC<ComboBoxProps> = ({
           onChange={(e) => setSearchTerm(e.target.value)}
           placeholder="Type to search..."
           className="combobox-input"
+          onKeyDown={handleKeyDown}
         />
       </div>
-        <div className="combobox-search-list">
-          {loading && <Loading />}
-          {!errorMessage && !loading && options?.map((option) => (
+      <div className="combobox-search-list">
+        {loading && <Loading />}
+        {!errorMessage &&
+          !loading &&
+          options?.map((option) => (
             <label key={option.id} className="combobox-search-item">
               <input
                 type="checkbox"
                 checked={option.isChecked}
                 onChange={() => handleCheck(option.id)}
-               />
+              />
               <img src={option.image} />
-              <div >
+              <div>
                 <HighligtedText text={option.name} searchTerm={searchTerm} />
                 <p className="combobox-search-info-text">
                   {option.episode.length} Episodes
@@ -82,9 +87,11 @@ const ComboBox: React.FC<ComboBoxProps> = ({
               </div>
             </label>
           ))}
-          {!errorMessage && !loading && isResultEmpty && <div>Nothing found</div>}
-          {errorMessage && <span className="combobox-error-message">{errorMessage}</span>}
-        </div>
+        {!errorMessage && !loading && isResultEmpty && <div>Nothing found</div>}
+        {errorMessage && (
+          <span className="combobox-error-message">{errorMessage}</span>
+        )}
+      </div>
     </div>
   );
 };

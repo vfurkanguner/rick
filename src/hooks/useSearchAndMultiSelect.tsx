@@ -14,6 +14,7 @@ interface UseSearchAndMultiSelectReturn {
   searchTerm: string;
   isResultEmpty: boolean;
   errorMessage: string;
+  handleKeyDown: (e: React.KeyboardEvent<HTMLInputElement>) => void;
 }
 
 export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
@@ -25,6 +26,39 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
 
   const debouncedName = useDebounce<string>(searchTerm, 500);
   const isResultEmpty = options?.length === 0;
+
+  const handleCheck = (id: number) => {
+    const newOptions = options?.map((option) => {
+      if (option.id === id) {
+        option.isChecked = !option.isChecked;
+        if (option.isChecked) {
+          setTags([...tags, option.name]);
+        } else {
+          setTags(tags.filter((tag) => tag !== option.name));
+        }
+      }
+      return option;
+    });
+    setOptions(newOptions);
+  };
+
+  const removeTag = (tagName: string) => {
+    setTags(tags.filter((tag) => tag !== tagName));
+    const newOptions = options?.map((option) => {
+      if (option.name === tagName) {
+        option.isChecked = false;
+      }
+      return option;
+    });
+    setOptions(newOptions);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Backspace" && searchTerm === "" && tags.length > 0) {
+      const tagsCopy = [...tags];
+      removeTag(tagsCopy[tagsCopy.length - 1]);
+    }
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -68,33 +102,8 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
     };
 
     fetchCharacters();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [debouncedName]);
-
-  const handleCheck = (id: number) => {
-    const newOptions = options?.map((option) => {
-      if (option.id === id) {
-        option.isChecked = !option.isChecked;
-        if (option.isChecked) {
-          setTags([...tags, option.name]);
-        } else {
-          setTags(tags.filter((tag) => tag !== option.name));
-        }
-      }
-      return option;
-    });
-    setOptions(newOptions);
-  };
-
-  const removeTag = (tagName: string) => {
-    setTags(tags.filter((tag) => tag !== tagName));
-    const newOptions = options?.map((option) => {
-      if (option.name === tagName) {
-        option.isChecked = false;
-      }
-      return option;
-    });
-    setOptions(newOptions);
-  };
 
   return {
     removeTag,
@@ -106,5 +115,6 @@ export const useSearchAndMultiSelect = (): UseSearchAndMultiSelectReturn => {
     searchTerm,
     isResultEmpty,
     errorMessage,
+    handleKeyDown
   };
 };

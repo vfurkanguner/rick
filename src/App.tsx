@@ -12,6 +12,8 @@ const App: React.FC = () => {
     handleCheck,
     setSearchTerm,
     searchTerm,
+    isResultEmpty,
+    errorMessage
   } = useSearchAndMultiSelect();
 
   return (
@@ -24,6 +26,8 @@ const App: React.FC = () => {
         tags={tags}
         loading={loading}
         searchTerm={searchTerm}
+        isResultEmpty={isResultEmpty}
+        errorMessage={errorMessage}
       />
     </div>
   );
